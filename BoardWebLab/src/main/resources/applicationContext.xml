@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                       http://www.springframework.org/schema/beans/spring-beans.xsd 
+                       http://www.springframework.org/schema/context 
+                       http://www.springframework.org/schema/context/spring-context-4.2.xsd
+                       http://www.springframework.org/schema/aop 
+                       http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+                       http://www.springframework.org/schema/tx 
+                       http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+    
+    <context:component-scan base-package="com.springbook.biz">
+    </context:component-scan>
+         
+    <!-- 파일 업로드 설정 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="100000" />
+    </bean>
+     
+ 
+    <!-- DataSource 등록 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	    <property name="driverClassName" value="org.h2.Driver" />
+	    <property name="url" value="jdbc:h2:tcp://localhost/~/test" />
+	    <property name="username" value="sa" />
+	    <property name="password" value="" />
+	</bean>
+
+	<!-- Spring JDBC 설정 -->
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+	    <property name="dataSource" ref="dataSource"/>
+	</bean>
+
+
+	<!-- Spring과 Mybatis 연동 설정 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+	    <property name="configLocation" value="classpath:sql-map-config.xml"></property>
+	    <property name="dataSource" ref="dataSource"></property>
+	</bean>
+    
+	<bean class="org.mybatis.spring.SqlSessionTemplate">
+	    <constructor-arg ref="sqlSession"></constructor-arg>
+	</bean>
+
+	<!-- Transaction 설정 -->
+	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+	    <property name="entityManagerFactory" ref="entityManagerFactory"></property>
+	</bean>
+	
+	<tx:advice id="txAdvice" transaction-manager="txManager">
+	    <tx:attributes>
+	        <tx:method name="get*" read-only="true"/>
+	        <tx:method name="*"/>
+	    </tx:attributes>
+	</tx:advice>
+	
+	<aop:config>
+	    <aop:pointcut id="allPointcut" 
+	                  expression="execution(* com.springbook.biz..*Impl.*(..))"/>
+	    <aop:advisor pointcut-ref="allPointcut" advice-ref="txAdvice"/>
+	</aop:config>
+	
+	
+	<!-- 스프링과 JPA 연동 설정 -->
+	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"></bean>
+	
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+	    <property name="dataSource" ref="dataSource"></property>
+	    <property name="jpaVendorAdapter" ref="jpaVendorAdapter"></property>
+	</bean>
+
+</beans>
+
+
