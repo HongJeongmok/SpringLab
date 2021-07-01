@@ -8,18 +8,20 @@
 
 
 	<!-- lab begin -->
-    <!-- <bean id="tv" class="polymorphism.SamsungTV">
-		<constructor-arg index="0" ref="apple"></constructor-arg>
-		<constructor-arg index="1" value="27000000"></constructor-arg>
-	</bean> -->
-	<bean id="tv" class="polymorphism.SamsungTV" p:speaker-ref="apple" p:price="28000"/>
-	
+	<!-- <bean id="tv" class="polymorphism.SamsungTV"> =>"tv" 이름의 bean 객체생성 
+		<constructor-arg index="0" ref="apple"></constructor-arg> <constructor-arg 
+		index="1" value="27000000"></constructor-arg> </bean> -->
+	<bean id="tv" class="polymorphism.SamsungTV" p:speaker-ref="apple"
+		p:price="28000" />
+
 	<bean id="sony" class="polymorphism.SonySpeaker"></bean>
 	<bean id="apple" class="polymorphism.AppleSpeaker"></bean>
-	
-	<!-- <context:component-scan base-package="polymorphism" /> -->
-	
-	<bean id="collectionBean" class="com.springbook.ioc.injection.CollectionBean">
+
+	<!-- <context:component-scan base-package="polymorphism" /> 어노테이션 @Component 
+		scan -->
+
+	<bean id="collectionBean"
+		class="com.springbook.ioc.injection.CollectionBean">
 		<property name="addressList">
 			<list>
 				<value>서울시 강남구 역상동</value>
@@ -27,7 +29,11 @@
 			</list>
 		</property>
 	</bean>
-	
+
+	<context:component-scan base-package="polymorphism"></context:component-scan>
+	<!-- <bean id="apple" class="polymorphism.AppleSpeaker"></bean> -->
+	<bean id="sony" class="polymorphism.SonySpeaker"></bean>
+
 	<!-- lab end -->
 
 </beans>
