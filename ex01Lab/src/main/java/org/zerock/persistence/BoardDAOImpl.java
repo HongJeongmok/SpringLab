@@ -20,7 +20,7 @@ public class BoardDAOImpl implements BoardDAO {
 
   @Override
   public void create(BoardVO vo) throws Exception {
-    session.insert(namespace + ".create", vo);
+    session.insert(namespace + ".create", vo);  // boardMapper.xml의 create를 vo 객체에 담아 두고 session에 저장 후 리턴
   }
 
   @Override

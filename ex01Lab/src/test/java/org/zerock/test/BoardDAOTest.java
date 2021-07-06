@@ -65,7 +65,7 @@ public class BoardDAOTest {
 
 	}
 
-	//@Test
+	@Test
 	public void testListPage() throws Exception {
 
 		int page = 1;
@@ -112,7 +112,7 @@ public class BoardDAOTest {
 		logger.info(uriComponents.toString());
 	}
 
-	@Test
+	//@Test
 	public void testDynamic1() throws Exception {
 
 		SearchCriteria cri = new SearchCriteria();
